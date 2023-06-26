@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, request
 from authlib.integrations.flask_client import OAuth
 
 app = Flask(__name__)
@@ -35,3 +35,20 @@ def authorize():
     # do something with the token and profile
     return redirect('/')
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    print('lgoout is called')
+    invalidation_url = 'http://127.0.0.1:9000/if/flow/sg-invalidation-flow/'
+    next_url = 'http://127.0.0.1:5000/login'
+    logout_uri = f'{invalidation_url}?next={next_url}'
+    return redirect(invalidation_url)
+
+
+@app.route('/logout2', methods=['GET', 'POST'])
+def logout2():
+    print('lgoout2 is called')
+    end_session = 'http://localhost:9000/application/o/supportgenie/end-session/'
+    invalidation_url = 'http://127.0.0.1:9000/if/flow/default-invalidation-flow/'
+    next_url = 'http://127.0.0.1:5000/login'
+    logout_uri = f'{end_session}?next={invalidation_url}&next={next_url}'
+    return redirect(end_session)
